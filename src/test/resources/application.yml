@@ -1,0 +1,36 @@
+#
+# configuration for tests
+#
+server:
+   port: ${port:8080}
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:eventdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    platform: h2
+
+  # enable H2 web console and set url for web console
+  # http://localhost:8080/console
+  h2:
+    console:
+      enabled: true
+      path: /console
+
+  # Spring Security
+  security:
+    basic:
+      enabled: false
+
+
+  # endpoint config
+  endpoints:
+    enabled: true
+    actuator:
+      enabled: true
+      sensitive: false
+    env:
+      enabled: true
+      sensitive: false
