@@ -1,0 +1,55 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.9.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+group = 'org.novalabs'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+dependencies {
+    compile('org.liquibase:liquibase-core')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-undertow')
+
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+
+    // @Nullable
+    compile('com.google.code.findbugs:jsr305:3.0.2')
+    // misc java utils
+    compile('com.google.guava:guava:23.6-jre')
+
+    // misc java extensions
+    compile('org.incava:ijdk:3.7.3')
+
+    runtime('org.springframework.boot:spring-boot-devtools')
+    // H2 database
+    runtime('com.h2database:h2')
+
+    testCompile('pl.pragmatists:JUnitParams:1.1.1')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
+}
