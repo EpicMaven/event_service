@@ -1,0 +1,69 @@
+#
+# Liquibase configuration for EventService
+#
+# Liquibase will use this file to build the SQL database for the Event Service.  Liquibase provides abstraction for the
+# database implementation, allowing databases to be changed without changing this configuration.
+#
+databaseChangeLog:
+  - preConditions:
+    - runningAs:
+        username: sa
+
+  - changeSet:
+      id: 1-event-table-create
+      author: mark.lundquist@gmail.com
+      changes:
+        - createTable:
+            schemaName: public
+            tableName: event
+            remarks: events
+            columns:
+            - column:
+                name: uuid
+                type: uuid
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: type
+                type: varchar(100)
+                constraints:
+                  nullable: false
+            - column:
+                name: value
+                type: varchar(255)
+                constraints:
+                  nullable: false
+            - column:
+                name: time
+                type: timestamp
+                constraints:
+                  nullable: false
+        - createIndex:
+            indexName: idx_uuid
+            schemaName: public
+            tableName: event
+            unique: true
+            columns:
+            - column:
+                name: uuid
+                type: uuid
+        - createIndex:
+            indexName: idx_type
+            schemaName: public
+            tableName: event
+            unique: false
+            columns:
+            - column:
+                name: type
+                type: varchar(100)
+        - createIndex:
+            indexName: idx_time
+            schemaName: public
+            tableName: event
+            unique: false
+            columns:
+            - column:
+                name: time
+                type: timestamp
+

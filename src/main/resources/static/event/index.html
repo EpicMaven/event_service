@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Service</title>
+    <link rel="icon" href="../images/favicon.ico">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/fontawesome-all-5.0.2.min.css" />
+
+    <!-- Custom styles -->
+    <link href="../css/nova-labs.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- navigation bar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+
+        <a href="https://www.nova-labs.org"><img src="../images/nova-labs_icon_64x64.png" height="32" width="32"/></a>
+        <a class="navbar-brand" href="#" onclick="show_main()">Event Service</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="queries" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Queries</a>
+                    <div class="dropdown-menu" aria-labelledby="queries">
+                        <a class="dropdown-item" href="#" id="event_types">Event Types</a>
+                        <a class="dropdown-item" href="#" id="latest_events">All latest Events</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- end navigation bar -->
+
+    <!-- container -->
+    <main role="main" class="container">
+        <div class="starter-template" id="main_content">
+            <h1>Nova Labs Event Service</h1>
+            <p class="lead">Nova Labs Event Service</p>
+        </div>
+
+    </main>
+    <!-- end container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- developer versions -->
+    <script src="../js/jquery-3.2.1.js"></script>
+    <script src="../js/popper-1.12.9.js"></script>
+    <script src="../js/bootstrap.js"></script>
+
+  <script type="application/javascript">
+      var main_html = "<h1>Nova Labs Event Service</h1><p class=\"lead\">Nova Labs Event Service</p>";
+      var event_header_html = "<thead><tr><th>Type</th><th>Value</th><th>Date/Time</th><th>Event UUID</th></tr></thead>";
+
+      function event_row_html(event) {
+        return "<tr><td>" + event.type + "</td><td>" + event.value + "</td><td>" + new Date(event.epochMillis) + "</td><td>" + event.uuid + "</td></tr>";
+      }
+
+      function build_event_table(events) {
+          $("#spinner").remove();
+          $( "<table/>", {
+              "class": "table table-condensed table-striped table-bordered table-hover",
+              html: events.join("")
+          }).appendTo($("#main_content"));
+      }
+
+      function show_main() {
+          $("#main_content").html(main_html);
+      }
+
+      function show_event_types() {
+          $("#main_content").html("<h2>Event Types</h2>");
+          $.getJSON("/event/types", function( data ) {
+              var types = [];
+              $.each( data, function( key, val ) {
+                  types.push( "<li id='" + val + "'><a href='javascript:show_latest_event(\"" + val + "\")'>" + val + "</a></li>" );
+              });
+              $( "<ul/>", {
+                  "class": "my-new-list",
+                  html: types.join("")
+              }).appendTo($("#main_content"));
+          });
+      }
+
+      function show_latest_events() {
+          $("#main_content").html("<h2>Latest Events</h2><i class='fa fa-spinner fa-pulse fa-spin' style='font-size:24px' id='spinner'></i>");
+          $.getJSON("/event/events", function( data ) {
+              var events = [];
+              events.push(event_header_html);
+              $.each( data, function( key, event ) {
+                  events.push(event_row_html(event));
+              });
+              build_event_table(events);
+          });
+      }
+
+      function show_latest_event(type) {
+          $("#main_content").html("<h2>Latest Event: " +  type + "</h2><i class='fa fa-spinner fa-pulse fa-spin' style='font-size:24px' id='spinner'></i>");
+          var url = "/event/events/" + type + "/latest";
+          $.getJSON(url, function( event ) {
+              var events = [];
+              events.push(event_header_html);
+              events.push(event_row_html(event));
+              build_event_table(events);
+          });
+      }
+
+      $('.dropdown-menu a').click(function(event) {
+          switch (event.currentTarget.id) {
+              case "event_types":
+                  show_event_types();
+                  break;
+              case "latest_events":
+                  show_latest_events();
+                  break;
+          }
+          console.info("got here " + event.currentTarget.id)
+      });
+  </script>
+
+</body>
+</html>
