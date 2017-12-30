@@ -25,7 +25,6 @@ spring:
     basic:
       enabled: false
 
-
   # endpoint config
   endpoints:
     enabled: true

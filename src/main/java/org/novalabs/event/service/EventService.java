@@ -35,8 +35,8 @@ public class EventService {
         List types;
         try {
             types = this.eventDao.findAllTypes();
-        } catch (Exception var3) {
-            logger.warn("Couldn't retrieve event types", var3);
+        } catch (Exception e) {
+            logger.warn("Couldn't retrieve event types", e);
             types = Collections.emptyList();
         }
 
@@ -53,8 +53,8 @@ public class EventService {
 
         try {
             wasAdded = this.eventDao.addEvent(event);
-        } catch (Exception var4) {
-            logger.warn("Couldn't add event | event {}", event, var4);
+        } catch (Exception e) {
+            logger.warn("Couldn't add event | event {}", event, e);
         }
 
         return wasAdded;
@@ -71,8 +71,8 @@ public class EventService {
 
         try {
             event = this.eventDao.findLatestEvent(eventType);
-        } catch (EventDaoException var4) {
-            logger.error("Couldn't retrieve findLatestEvent", var4);
+        } catch (EventDaoException e) {
+            logger.error("Couldn't retrieve findLatestEvent", e);
         }
 
         return event;
@@ -86,9 +86,9 @@ public class EventService {
         List latestEvents;
         try {
             latestEvents = this.eventDao.findLatestEvents();
-        } catch (EventDaoException var3) {
+        } catch (EventDaoException e) {
             latestEvents = Collections.emptyList();
-            logger.error("Couldn't retrieve findLatestEvents", var3);
+            logger.error("Couldn't retrieve findLatestEvents", e);
         }
 
         return latestEvents;
@@ -103,9 +103,9 @@ public class EventService {
         List events;
         try {
             events = this.eventDao.findEvents(eventType);
-        } catch (EventDaoException var4) {
+        } catch (EventDaoException e) {
             events = Collections.emptyList();
-            logger.error("Couldn't retrieve findLatestEvent", var4);
+            logger.error("Couldn't retrieve findLatestEvent", e);
         }
 
         return events;
@@ -122,9 +122,9 @@ public class EventService {
         List events;
         try {
             events = this.eventDao.findEvents(eventType, earliestTime, latestTime);
-        } catch (EventDaoException var6) {
+        } catch (EventDaoException e) {
             events = Collections.emptyList();
-            logger.error("Couldn't retrieve findLatestEvent | earliest {} | latest {}", new Object[]{earliestTime, latestTime, var6});
+            logger.error("Couldn't retrieve findLatestEvent | earliest {} | latest {}", earliestTime, latestTime, e);
         }
 
         return events;
@@ -140,9 +140,9 @@ public class EventService {
         try {
             long count = this.eventDao.countEvents(eventType);
             eventCount = new EventCount(eventType, count);
-        } catch (EventDaoException var5) {
+        } catch (EventDaoException e) {
             eventCount = null;
-            logger.error("Couldn't retrieve countEvents", var5);
+            logger.error("Couldn't retrieve countEvents", e);
         }
 
         return eventCount;
