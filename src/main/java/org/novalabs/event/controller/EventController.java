@@ -118,7 +118,7 @@ public class EventController {
         long start = System.currentTimeMillis();
         logger.info("countEvents");
         EventCount eventCount = this.eventService.countEvents(type);
-        logger.info("countEvents | type {} | count {} | duration {}", new Object[]{type, eventCount.getCount(), TimingUtils.duration(start)});
+        logger.info("countEvents | type {} | count {} | duration {}", type, eventCount.getCount(), TimingUtils.duration(start));
         return eventCount;
     }
 
@@ -174,12 +174,12 @@ public class EventController {
             boolean wasAdded = this.eventService.addEvent(event);
             if (wasAdded) {
                 headers.setLocation(ucBuilder.path("/events/" + event.getType() + "/").build().toUri());
-                return new ResponseEntity(headers, HttpStatus.CREATED);
+                return new ResponseEntity<>(headers, HttpStatus.CREATED);
             } else {
-                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
         }
     }
 
