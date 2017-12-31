@@ -9,12 +9,27 @@ require 'time'
 require 'set'
 require 'json'
 
-def epoch_millis(time)
-  (time.to_f * 1000).to_i
+module EpochMillis
+  def self.included base
+    base.send :include, InstanceMethods
+    base.extend ClassMethods
+  end
+
+  module InstanceMethods
+    def to_millis
+      (to_f * 1000).to_i
+    end
+  end
+
+  module ClassMethods
+    def millis(epochMillis)
+      at(epochMillis/1000.0).utc
+    end
+  end
 end
 
-def to_time(epochMillis)
-  Time.at(epochMillis/1000.0).utc
+class Time
+  include EpochMillis
 end
 
 class EventType
@@ -37,7 +52,7 @@ class EventType
   end
 
   def random_times(day)
-    midnight = epoch_millis(Time.utc(day.year, day.month, day.day, 0, 0, 0))
+    midnight = Time.utc(day.year, day.month, day.day, 0, 0, 0).to_millis
     times = Array.new
     for delta in rand_n(@changes_per_day).sort
       time = midnight + delta
@@ -73,12 +88,11 @@ types.push( EventType.new("front_door", ["open", "closed"], 30) )
 types.push( EventType.new("shop_door", ["open", "closed"], 20) )
 
 start_day = "2017-01-10T00:00:00.000Z"
-start = Time.parse(start_day)
-startEpochMillis = epoch_millis(start)
+start_epoch_millis = Time.parse(start_day).to_millis
 days = 60
 
 for i in 0..(days - 1)
-  day = to_time(startEpochMillis + (86400000 * i))
+  day = Time.millis(start_epoch_millis + (86400000 * i))
   for type in types
     events = type.events(day)
     for e in events
@@ -87,6 +101,3 @@ for i in 0..(days - 1)
     end
   end
 end
-
-
-#response = RestClient.post('http://localhost:8080/event/events', e.to_json , {:content_type => :json})
