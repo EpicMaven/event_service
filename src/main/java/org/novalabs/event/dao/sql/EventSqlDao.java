@@ -60,14 +60,14 @@ public class EventSqlDao implements EventDao {
                 try {
                     typeName = resultSet.getString("type");
                     types.add(typeName);
-                } catch (Exception var6) {
-                    logger.warn("Illegal EventType name in findAllTypes | name {}", typeName);
+                } catch (Exception e) {
+                    logger.warn("Illegal EventType name in findAllTypes | name {}", typeName, e);
                 }
             }
 
             return types;
-        } catch (Exception var7) {
-            throw new EventDaoException("findAllTypes database call failed", var7);
+        } catch (Exception e) {
+            throw new EventDaoException("findAllTypes database call failed", e);
         }
     }
 
@@ -90,8 +90,8 @@ public class EventSqlDao implements EventDao {
             }
 
             return event;
-        } catch (Exception var5) {
-            throw new EventDaoException("findLatestEvent database call failed", var5);
+        } catch (Exception e) {
+            throw new EventDaoException("findLatestEvent database call failed", e);
         }
     }
 
@@ -112,9 +112,9 @@ public class EventSqlDao implements EventDao {
             }
 
             return latestEvents;
-        } catch (Exception var4) {
+        } catch (Exception e) {
             logger.warn("findLatestEvents database call failed | sql {}", LATEST_EVENTS_SQL);
-            throw new EventDaoException("findLatestEvents database call failed", var4);
+            throw new EventDaoException("findLatestEvents database call failed", e);
         }
     }
 
@@ -141,8 +141,8 @@ public class EventSqlDao implements EventDao {
             }
 
             return wasAdded;
-        } catch (Exception var5) {
-            throw new EventDaoException("findLatestEvent database call failed", var5);
+        } catch (Exception e) {
+            throw new EventDaoException("findLatestEvent database call failed", e);
         }
     }
 
@@ -163,16 +163,16 @@ public class EventSqlDao implements EventDao {
             while(resultSet.next()) {
                 try {
                     events.add(this.buildEvent(resultSet));
-                } catch (SQLException var6) {
-                    logger.warn("Couldn't deserialize Event from database");
+                } catch (SQLException e) {
+                    logger.warn("Couldn't deserialize Event from database", e);
                 }
             }
 
             return events;
-        } catch (Exception var7) {
+        } catch (Exception e) {
             String msg = "findEvents database call failed";
             logger.error(msg);
-            throw new EventDaoException(msg, var7);
+            throw new EventDaoException(msg, e);
         }
     }
 
@@ -198,16 +198,16 @@ public class EventSqlDao implements EventDao {
             while(resultSet.next()) {
                 try {
                     events.add(this.buildEvent(resultSet));
-                } catch (Exception var8) {
-                    logger.warn("Couldn't deserialize Event from database");
+                } catch (Exception e) {
+                    logger.warn("Couldn't deserialize Event from database", e);
                 }
             }
 
             return events;
-        } catch (Exception var9) {
+        } catch (Exception e) {
             String msg = "findEvents database call failed | oldest " + earliestTime + " | newest " + latestTime;
             logger.error(msg);
-            throw new EventDaoException(msg, var9);
+            throw new EventDaoException(msg, e);
         }
     }
 
@@ -228,16 +228,16 @@ public class EventSqlDao implements EventDao {
             while(resultSet.next()) {
                 try {
                     count = resultSet.getLong(1);
-                } catch (Exception var7) {
-                    logger.warn("Couldn't deserialize Event from database");
+                } catch (Exception e) {
+                    logger.warn("Couldn't deserialize Event from database", e);
                 }
             }
 
             return count;
-        } catch (Exception var8) {
+        } catch (Exception e) {
             String msg = "countEvents database call failed | type " + eventType;
             logger.error(msg);
-            throw new EventDaoException(msg, var8);
+            throw new EventDaoException(msg, e);
         }
     }
 

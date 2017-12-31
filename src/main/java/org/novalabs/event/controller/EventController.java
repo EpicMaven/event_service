@@ -9,6 +9,7 @@ import org.novalabs.event.service.EventService;
 import org.novalabs.event.util.TimingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -76,12 +78,18 @@ public class EventController {
      */
     @GetMapping({"/events/{type}/latest"})
     @ResponseBody
-    public Event latestEvent(@PathVariable("type") String type) {
+    public ResponseEntity<Event> latestEvent(@PathVariable("type") String type) {
         long start = System.currentTimeMillis();
-        logger.info("latestEvent");
+        logger.info("latestEvent | type {}");
         Event event = this.eventService.latestEvent(type);
-        logger.info("latestEvent | type {} | duration {}", type, TimingUtils.duration(start));
-        return event;
+        logger.info("latestEvent finished | event {} | duration {}", event, TimingUtils.duration(start));
+        ResponseEntity<Event> response;
+        if (event != null) {
+            response = new ResponseEntity<>(event, HttpStatus.OK);
+        } else {
+            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return response;
     }
 
     /**
@@ -110,7 +118,7 @@ public class EventController {
         long start = System.currentTimeMillis();
         logger.info("countEvents");
         EventCount eventCount = this.eventService.countEvents(type);
-        logger.info("countEvents | type {} | count {} | duration {}", new Object[]{type, eventCount.getCount(), TimingUtils.duration(start)});
+        logger.info("countEvents | type {} | count {} | duration {}", type, eventCount.getCount(), TimingUtils.duration(start));
         return eventCount;
     }
 
@@ -160,17 +168,18 @@ public class EventController {
      */
     @PostMapping({"/events"})
     public ResponseEntity<Event> addEvent(@RequestBody Event event, UriComponentsBuilder ucBuilder) {
+        logger.info("received POST | event {}", event);
         HttpHeaders headers = new HttpHeaders();
         if (event != null && !event.isInvalid()) {
             boolean wasAdded = this.eventService.addEvent(event);
             if (wasAdded) {
                 headers.setLocation(ucBuilder.path("/events/" + event.getType() + "/").build().toUri());
-                return new ResponseEntity(headers, HttpStatus.CREATED);
+                return new ResponseEntity<>(headers, HttpStatus.CREATED);
             } else {
-                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
         }
     }
 
