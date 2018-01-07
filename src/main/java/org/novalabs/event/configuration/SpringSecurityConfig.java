@@ -26,11 +26,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] PUBLIC_PATHS = new String[]{"/", "/event/**", "/health", "/actuator/**", "/beans", "/liquibase"};
 
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                .antMatchers(PUBLIC_PATHS).permitAll()
-                .antMatchers(new String[]{"/admin/**"}).hasAnyRole(new String[]{"ADMIN"})
-                .anyRequest().permitAll().and().formLogin().loginPage("/login").permitAll()
-                .and().logout().permitAll().and().exceptionHandling().accessDeniedHandler(this.accessDeniedHandler);
+        http.csrf().disable()
+                .authorizeRequests()
+                    .antMatchers(PUBLIC_PATHS).permitAll()
+                    .antMatchers(new String[]{"/admin/**"}).hasAnyRole(new String[]{"ADMIN"})
+                    .anyRequest().permitAll()
+                .and()
+                    .formLogin().loginPage("/login").permitAll()
+                .and()
+                    .logout().permitAll()
+                .and()
+                    .exceptionHandling().accessDeniedHandler(this.accessDeniedHandler)
+        ;
     }
 
     @Autowired
@@ -40,4 +47,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .withUser("admin").password("password").roles(new String[]{"ADMIN"});
     }
+
 }
