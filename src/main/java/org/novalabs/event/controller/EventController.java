@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * REST controller for the Event Service.  The controller is responsible for handling the RESTful requests and responses.
  */
 @RestController
-@RequestMapping({"/event"})
+@RequestMapping({"/"})
 public class EventController {
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
     private final EventService eventService;
@@ -190,6 +190,6 @@ public class EventController {
      */
     @GetMapping
     public ModelAndView indexRedirect(ModelMap model) {
-        return new ModelAndView("forward:/event/index.html", model);
+        return new ModelAndView("forward:/index.html", model);
     }
 }
