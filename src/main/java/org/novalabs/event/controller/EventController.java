@@ -80,7 +80,7 @@ public class EventController {
     @ResponseBody
     public ResponseEntity<Event> latestEvent(@PathVariable("type") String type) {
         long start = System.currentTimeMillis();
-        logger.info("latestEvent | type {}");
+        logger.info("latestEvent | type {}", type);
         Event event = this.eventService.latestEvent(type);
         logger.info("latestEvent finished | event {} | duration {}", event, TimingUtils.duration(start));
         ResponseEntity<Event> response;
