@@ -20,7 +20,11 @@
 
 ### END INIT INFO
 
-. /etc/rc.d/init.d/functions
+if [ -f /etc/redhat-release ] || [ -f /etc/fedora-release ]; then
+  . /etc/rc.d/init.d/functions
+else
+  . /lib/lsb/init-functions
+fi
 
 export EVENT_HOME=/opt/event_service
 export EVENT_JAR_DIR=$EVENT_HOME
