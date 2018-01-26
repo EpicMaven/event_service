@@ -89,14 +89,14 @@ types.push( EventType.new("shop_door", ["open", "closed"], 20) )
 
 start_day = "2017-01-10T00:00:00.000Z"
 start_epoch_millis = Time.parse(start_day).to_millis
-days = 60
+days = 5
 
 for i in 0..(days - 1)
   day = Time.millis(start_epoch_millis + (86400000 * i))
   for type in types
     events = type.events(day)
     for e in events
-      response = RestClient.post('http://localhost:8080/event/events', e.to_json , {:content_type => :json})
+      response = RestClient.post('http://localhost:8443/events', e.to_json , {:content_type => :json})
       puts "#{e.to_json} - #{response.code}"
     end
   end
