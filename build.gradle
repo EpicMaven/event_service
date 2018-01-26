@@ -15,7 +15,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 group = 'org.novalabs'
-version = '1.0.4'
+version = '1.0.5'
 sourceCompatibility = 1.8
 
 repositories {
@@ -43,7 +43,11 @@ dependencies {
     compile('com.google.guava:guava:23.6-jre')
 
     // misc java extensions
-    compile('org.incava:ijdk:3.7.3')
+    compile('org.incava:ijdk:3.7.4')
+
+    // Swagger API documentation
+    compile('io.springfox:springfox-swagger2:2.7.0')
+    compile('io.springfox:springfox-swagger-ui:2.7.0')
 
     runtime('org.springframework.boot:spring-boot-devtools')
     // H2 database
