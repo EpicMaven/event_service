@@ -2,16 +2,16 @@
 # configuration
 #
 server:
-  port: ${port:8080}
-#  ssl:
-#    enabled: true
-#    key-store: event.nova-labs.org.p12
-#    key-store-password: novalabs
-#    key-password: novalabs
-#    key-store-type: PKCS12
-#
-#https:
-#  protocols: "TLSv1.2,TLSv1.1"
+  port: ${port:8443}
+  ssl:
+    enabled: true
+    key-store: event.nova-labs.org.p12
+    key-store-password: novalabs
+    key-password: novalabs
+    key-store-type: PKCS12
+
+https:
+  protocols: "TLSv1.2,TLSv1.1"
 
 
 spring:
